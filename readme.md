@@ -1,6 +1,11 @@
 # Lopttie
 Lopttie is a Lottie optimization node CLI tool for compressing image sequences.
 
+#### Wishlist
+
+- Transcode!
+- WebP!?
+
 ## Installation
 
 To install you can git clone this repo, run the following to to install Lopttie globally 
@@ -13,6 +18,13 @@ To install you can git clone this repo, run the following to to install Lopttie 
 
 ```html 
 lopttie <path> <quality>
+```
+### examples
+```bash
+lopttie ./Galaxy.json  --pngQuality 3
+```
+```bash
+lopttie ./Galaxy.json  --jpegQuality 75
 ```
 
 The only required arguments to lopttie is the path to the Lottie/Bodymovin json to be compressed and one of the relevant quality arguments.
