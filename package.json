@@ -1,0 +1,27 @@
+{
+  "name": "lottie-optimizer",
+  "type": "module",
+  "version": "0.0.1",
+  "description": "Optimize Lottie image assets",
+  "main": "bin/index.js",
+  "bin": {
+    "lopttie": "./bin/index.js"
+  },
+  "scripts": {
+    "start": "node .",
+    "update": "npm install -g .",
+    "watch": "watch 'npm run update' ./bin",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "iltimas doha",
+  "license": "ISC",
+  "dependencies": {
+    "arg": "^5.0.1",
+    "chalk": "^4.1.2",
+    "imagemin": "^8.0.1",
+    "imagemin-jpegtran": "^7.0.0",
+    "imagemin-mozjpeg": "^9.0.0",
+    "imagemin-pngquant": "^9.0.2",
+    "watch": "^1.0.2"
+  }
+}
