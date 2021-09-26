@@ -8,21 +8,32 @@ import imageminPngquant from "imagemin-pngquant";
 import { dirname } from "path";
 const args = arg(
   {
-    "--quality": Number, //TODO
+    "--quality": Number, //TODO: generalize png + jpeg
+    "--jpegQuality": Number,
+    "--pngQuality": Number,
     "--noop": Boolean,
     "--debug": Boolean,
     "--output": String,
-    "--rewrite": Boolean,
+    "--rewrite": Boolean, //TODO: Maybe not include?
     "--output": String,
     "-q": "--quality",
+    "-d": "--debug",
+    "-o": "--output",
   },
   { permissive: false, argv: process.argv.slice(2) }
 );
+
 checkUnnamedArgCount();
+let importedJson = JSON.parse(fs.readFileSync(args._[0]));
+
+checkRequiredQualityArgs();
+
+//convert args to global vars
 let output = args["--output"];
 let debug = args["--debug"];
 
-let importedJson = JSON.parse(fs.readFileSync(args._[0]));
+//end globals
+if (debug) console.log(args);
 
 //--main loop
 if (args["--noop"]) {
@@ -46,6 +57,31 @@ if (args["--noop"]) {
   );
   writeFile(output ?? "export.json", JSON.stringify(importedJson));
 }
+function checkRequiredQualityArgs() {
+  let dataUri = importedJson.assets[0].p.slice(
+    0,
+    importedJson.assets[0].p.indexOf(",") + 1
+  );
+  let mimeType = dataUri.substring(
+    dataUri.indexOf("/") + 1,
+    dataUri.lastIndexOf(";")
+  );
+  let requiredQualityArg = `--${mimeType}Quality`;
+  if (!args[requiredQualityArg]) {
+    throw Error(`
+  First frame of animation has a mime type of 
+  ${chalk.red(mimeType)}
+  Which means the following required arg is missing
+  ${chalk.yellow(requiredQualityArg)}
+  `);
+  }
+  console.log(
+    chalk.bgYellowBright.black(
+      `Reminder that ${requiredQualityArg} takes a value between`
+    )
+  );
+}
+
 //-- end main loop
 // -----   Functions
 function printCompresssionProgress(i, imageData, compressedImgBase64) {
@@ -81,9 +117,9 @@ async function compressAndWriteLottieAssets(obj, i) {
   let compressedImgBuffer = await imagemin.buffer(imgAsBuffer, {
     destination: "build/images",
     plugins: [
-      imageminMozjpeg({ quality: 1 }),
+      imageminMozjpeg({ quality: args["--jpegQuality"] }),
       imageminPngquant({
-        quality: [0.1, 0.1],
+        speed: args["--pngQuality"] ?? 4,
       }),
     ],
   });
