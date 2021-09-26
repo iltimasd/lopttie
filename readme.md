@@ -1,5 +1,7 @@
+![Image of a Lopped Ear Rabbit](./docs/images/mrgold.jpeg)
 # Lopttie
 Lopttie is a Lottie optimization node CLI tool for compressing image sequences.
+
 
 #### Wishlist
 
