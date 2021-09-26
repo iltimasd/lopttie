@@ -2,6 +2,10 @@
   "name": "lopttie",
   "type": "module",
   "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iltimasd/lopttie.git"
+  },
   "description": "Optimize Lottie image assets",
   "main": "bin/index.js",
   "bin": {
