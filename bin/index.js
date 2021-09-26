@@ -15,7 +15,7 @@ const args = arg(
     "--debug": Boolean,
     "--output": String,
     "--rewrite": Boolean, //TODO: Maybe not include?
-    "--output": String,
+    "--type": Boolean,
     "-q": "--quality",
     "-d": "--debug",
     "-o": "--output",
@@ -26,11 +26,15 @@ const args = arg(
 checkUnnamedArgCount();
 let importedJson = JSON.parse(fs.readFileSync(args._[0]));
 
-checkRequiredQualityArgs();
-
 //convert args to global vars
 let output = args["--output"];
 let debug = args["--debug"];
+let noop = args["--noop"];
+
+if (args["--type"]) {
+  logMimeType();
+}
+if (!noop) checkRequiredQualityArgs();
 
 //end globals
 if (debug) console.log(args);
@@ -57,6 +61,25 @@ if (args["--noop"]) {
   );
   writeFile(output ?? "export.json", JSON.stringify(importedJson));
 }
+
+function logMimeType() {
+  let dataUri = importedJson.assets[0].p.slice(
+    0,
+    importedJson.assets[0].p.indexOf(",") + 1
+  );
+  let mimeType = dataUri.substring(
+    dataUri.indexOf("/") + 1,
+    dataUri.lastIndexOf(";")
+  );
+  console.log(
+    chalk.magentaBright(
+      `THIS LOTTIE IMAGE SEQUENCE IS USING ${chalk.bgMagentaBright.white(
+        mimeType
+      )}`
+    )
+  );
+}
+
 function checkRequiredQualityArgs() {
   let dataUri = importedJson.assets[0].p.slice(
     0,
