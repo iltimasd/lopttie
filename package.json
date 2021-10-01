@@ -26,6 +26,7 @@
     "imagemin-jpegtran": "^7.0.0",
     "imagemin-mozjpeg": "^9.0.0",
     "imagemin-pngquant": "^9.0.2",
+    "imagemin-webp": "^6.0.0",
     "watch": "^1.0.2"
   },
   "devDependencies": {

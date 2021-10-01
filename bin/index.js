@@ -108,8 +108,10 @@ function checkRequiredQualityArgs() {
 //-- end main loop
 // -----   Functions
 function printCompresssionProgress(i, imageData, compressedImgBase64) {
-  process.stdout.moveCursor(0, -1); // up one line
-  process.stdout.clearLine(1); // from cursor to end
+  if (!debug) {
+    process.stdout.moveCursor(0, -1); // up one line
+    process.stdout.clearLine(1); // from cursor to end
+  }
   console.log(
     i,
     "/",
@@ -142,7 +144,10 @@ async function compressAndWriteLottieAssets(obj, i) {
     plugins: [
       imageminMozjpeg({ quality: args["--jpegQuality"] }),
       imageminPngquant({
-        speed: args["--pngQuality"] ?? 4,
+        speed: args["--pngQuality"],
+        quality: [0, 0.3],
+        strip: true,
+        verbose: true,
       }),
     ],
   });
