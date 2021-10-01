@@ -5,6 +5,7 @@ import fs from "fs";
 import imagemin from "imagemin";
 import imageminMozjpeg from "imagemin-mozjpeg";
 import imageminPngquant from "imagemin-pngquant";
+import imageminWebp from "imagemin-webp";
 import { dirname } from "path";
 const args = arg(
   {
@@ -136,23 +137,37 @@ function printCompresssionProgress(i, imageData, compressedImgBase64) {
 async function compressAndWriteLottieAssets(obj, i) {
   let indexOfData = obj.p.indexOf(",") + 1;
   let imageData = obj.p.slice(indexOfData);
-  let imageUriMeta = obj.p.slice(0, indexOfData);
+  // let imageUriMeta = obj.p.slice(0, indexOfData);
+  let imageUriMeta = "data:image/webp;base64,";
   let imgAsBuffer = Buffer.from(imageData, "base64");
   if (debug) fs.writeFileSync("before.jpeg", imgAsBuffer);
   let compressedImgBuffer = await imagemin.buffer(imgAsBuffer, {
     destination: "build/images",
     plugins: [
-      imageminMozjpeg({ quality: args["--jpegQuality"] }),
-      imageminPngquant({
-        speed: args["--pngQuality"],
-        quality: [0, 0.3],
-        strip: true,
-        verbose: true,
+      // imageminMozjpeg({ quality: args["--jpegQuality"] }),
+      // imageminPngquant({
+      //   speed: args["--pngQuality"],
+      //   quality: [0, 0.3],
+      //   strip: true,
+      //   verbose: true,
+      // }),
+      imageminWebp({
+        // lossless: true,
+        quality: 0,
+        alphaQuality: 0,
+
+        crop: {
+          x: 569,
+          y: 104,
+          width: 890,
+          height: 917,
+        },
+        // nearLossless: 0,
+        // method: 6,
       }),
     ],
   });
   if (debug) fs.writeFileSync("after.jpeg", compressedImgBuffer);
-
   let compressedImgBase64 = compressedImgBuffer.toString("base64");
   importedJson.assets[i].p = imageUriMeta + compressedImgBase64;
   return { imageData, compressedImgBase64 };
